@@ -12,6 +12,11 @@ import reactor.core.publisher.Flux;
 
 import java.net.URI;
 
+
+/**
+ * This class is a decorator for the GatewayRequest object for GET requests.
+ * It extends the ServerHttpRequestDecorator class and overrides its methods to modify the request.
+ */
 @Slf4j
 public class GetRequestDecorator extends ServerHttpRequestDecorator {
 
@@ -23,12 +28,24 @@ public class GetRequestDecorator extends ServerHttpRequestDecorator {
         this.gatewayRequest = gatewayRequest;
     }
 
+    /**
+     * This method overrides the getMethod method of the ServerHttpRequestDecorator class.
+     * It returns the HTTP method of the request, which is GET.
+     *
+     * @return the HTTP method of the request
+     */
     @Override
     @NonNull
     public HttpMethod getMethod() {
         return HttpMethod.GET;
     }
 
+    /**
+     * This method overrides the getURI method of the ServerHttpRequestDecorator class.
+     * It returns the URI of the request, including any query parameters.
+     *
+     * @return the URI of the request
+     */
     @Override
     @NonNull
     public URI getURI() {
@@ -39,12 +56,24 @@ public class GetRequestDecorator extends ServerHttpRequestDecorator {
                 .toUri();
     }
 
+    /**
+     * This method overrides the getHeaders method of the ServerHttpRequestDecorator class.
+     * It returns the headers of the request.
+     *
+     * @return the headers of the request
+     */
     @Override
     @NonNull
     public HttpHeaders getHeaders() {
         return gatewayRequest.getHeaders();
     }
 
+    /**
+     * This method overrides the getBody method of the ServerHttpRequestDecorator class.
+     * Since GET requests do not have a body, it returns an empty Flux of DataBuffers.
+     *
+     * @return an empty Flux of DataBuffers
+     */
     @Override
     @NonNull
     public Flux<DataBuffer> getBody() {

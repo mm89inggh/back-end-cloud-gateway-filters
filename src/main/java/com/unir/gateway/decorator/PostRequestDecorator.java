@@ -16,6 +16,11 @@ import reactor.core.publisher.Flux;
 
 import java.net.URI;
 
+/**
+ * This class is a decorator for the GatewayRequest object for POST requests.
+ * It extends the ServerHttpRequestDecorator class and overrides its methods to modify the request.
+ * It uses the ObjectMapper to convert the body of the GatewayRequest object into bytes.
+ */
 @Slf4j
 public class PostRequestDecorator extends ServerHttpRequestDecorator {
 
@@ -28,24 +33,48 @@ public class PostRequestDecorator extends ServerHttpRequestDecorator {
         this.objectMapper = objectMapper;
     }
 
+    /**
+     * This method overrides the getMethod method of the ServerHttpRequestDecorator class.
+     * It returns the HTTP method of the request, which is POST.
+     *
+     * @return the HTTP method of the request
+     */
     @Override
     @NonNull
     public HttpMethod getMethod() {
         return HttpMethod.POST;
     }
 
+    /**
+     * This method overrides the getURI method of the ServerHttpRequestDecorator class.
+     * It returns the URI of the request.
+     *
+     * @return the URI of the request
+     */
     @Override
     @NonNull
     public URI getURI() {
         return UriComponentsBuilder.fromUri(gatewayRequest.getExchange().getRequest().getURI()).build().toUri();
     }
 
+    /**
+     * This method overrides the getHeaders method of the ServerHttpRequestDecorator class.
+     * It returns the headers of the request.
+     *
+     * @return the headers of the request
+     */
     @Override
     @NonNull
     public HttpHeaders getHeaders() {
         return gatewayRequest.getHeaders();
     }
 
+    /**
+     * This method overrides the getBody method of the ServerHttpRequestDecorator class.
+     * It converts the body of the GatewayRequest object into bytes using the ObjectMapper, and returns it as a Flux of DataBuffers.
+     *
+     * @return a Flux of DataBuffers representing the body of the request
+     */
     @Override
     @NonNull
     @SneakyThrows

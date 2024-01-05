@@ -27,7 +27,6 @@ spring:
           lower-case-service-id: true
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-        - MutationFilter
       globalcors: ## Configuracion de CORS a nivel Gateway
         cors-configurations:
           '[/**]': ## Para todas las rutas
