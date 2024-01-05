@@ -1,0 +1,50 @@
+server:
+  port: 8762
+        
+## Configuracion clasica de Eureka
+eureka:
+  instance:
+    preferIpAddress: true # Se mantiene a true para reflejar la diferencia con false cuando veamos la lista de aplicaciones de Eureka
+    hostname: ${HOSTNAME:localhost}
+    
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+      
+
+## Habilitamos el service discovery (haciendo uso de Eureka)
+## lower-case-service-id necesario ya que por defecto se pone en mayusculas, al cogerlo de Eureka
+spring:
+  application:
+    name: gateway    
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - MutationFilter
+      globalcors: ## Configuracion de CORS a nivel Gateway
+        cors-configurations:
+          '[/**]': ## Para todas las rutas
+            allowedOrigins: ${ALLOWED_ORIGINS:*} # Si ponemos '*' permitimos todos los origenes. Podemos restringir indicando dominios o ip + puerto, p.ej http://localhost:3000 (donde esta nuestro front, o un dominio de Vercel)
+            allowedHeaders: "*" ## Permitimos todos los headers
+            allowedMethods:
+            - POST
+      
+
+## Habilitamos la API Actuator para poder acceder a /actuator/gateway/routes
+## Exponemos los routings que se han detectado automáticamente (todos)
+management:
+  endpoint:
+    gateway:  
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+        - '*'
