@@ -1,4 +1,0 @@
-## Se modifica la configuracion para que el balanceador use la direccion IP en lugar del hostname
-eureka:
-  instance:
-    preferIpAddress: true
