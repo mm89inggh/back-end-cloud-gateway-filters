@@ -5,6 +5,7 @@ import com.unir.gateway.model.GatewayRequest;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
@@ -54,7 +55,7 @@ public class PostRequestDecorator extends ServerHttpRequestDecorator {
     @Override
     @NonNull
     public URI getURI() {
-        return UriComponentsBuilder.fromUri(gatewayRequest.getExchange().getRequest().getURI()).build().toUri();
+        return UriComponentsBuilder.fromUri((URI) gatewayRequest.getExchange().getAttributes().get(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR)).build().toUri();
     }
 
     /**

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,9 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.util.Optional;
 
 /**
  * This class is a custom filter for the Spring Cloud Gateway. It is responsible for translating incoming requests.
@@ -57,6 +61,8 @@ public class RequestTranslationFilter implements GlobalFilter {
                     .flatMap(dataBuffer -> {
                         GatewayRequest request = requestBodyExtractor.getRequest(exchange, dataBuffer);
                         ServerHttpRequest mutatedRequest = requestDecoratorFactory.getDecorator(request);
+                        //RouteToRequestUrlFilter writes the URI to the exchange attributes *before* any global filters run.
+                        exchange.getAttributes().put(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR, mutatedRequest.getURI());
                         log.info("Proxying request: {} {}", mutatedRequest.getMethod(), mutatedRequest.getURI());
                         return chain.filter(exchange.mutate().request(mutatedRequest).build());
                     });

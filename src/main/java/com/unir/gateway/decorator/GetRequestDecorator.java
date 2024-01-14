@@ -3,6 +3,7 @@ package com.unir.gateway.decorator;
 import com.unir.gateway.model.GatewayRequest;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -50,7 +51,7 @@ public class GetRequestDecorator extends ServerHttpRequestDecorator {
     @NonNull
     public URI getURI() {
         return UriComponentsBuilder
-                .fromUri(gatewayRequest.getExchange().getRequest().getURI())
+                .fromUri((URI) gatewayRequest.getExchange().getAttributes().get(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR))
                 .queryParams(gatewayRequest.getQueryParams())
                 .build()
                 .toUri();
