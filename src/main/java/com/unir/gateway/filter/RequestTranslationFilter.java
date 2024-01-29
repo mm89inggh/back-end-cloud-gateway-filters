@@ -16,9 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
-import java.util.Optional;
-
 /**
  * This class is a custom filter for the Spring Cloud Gateway. It is responsible for translating incoming requests.
  * It uses the RequestBodyExtractor to extract the body of the request and the RequestDecoratorFactory to create a decorator for the request.
@@ -63,6 +60,9 @@ public class RequestTranslationFilter implements GlobalFilter {
                         ServerHttpRequest mutatedRequest = requestDecoratorFactory.getDecorator(request);
                         //RouteToRequestUrlFilter writes the URI to the exchange attributes *before* any global filters run.
                         exchange.getAttributes().put(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR, mutatedRequest.getURI());
+                        if(request.getQueryParams() != null) {
+                            request.getQueryParams().clear();
+                        }
                         log.info("Proxying request: {} {}", mutatedRequest.getMethod(), mutatedRequest.getURI());
                         return chain.filter(exchange.mutate().request(mutatedRequest).build());
                     });
