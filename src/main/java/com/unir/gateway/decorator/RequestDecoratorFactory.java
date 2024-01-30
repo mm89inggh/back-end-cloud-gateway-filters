@@ -30,7 +30,7 @@ public class RequestDecoratorFactory {
      * @throws IllegalArgumentException if the HTTP method of the request is neither GET nor POST
      */
         public ServerHttpRequestDecorator getDecorator(GatewayRequest request) {
-            return switch (request.getTargetMethod().name()) {
+            return switch (request.getTargetMethod().name().toUpperCase()) {
                 case "GET" -> new GetRequestDecorator(request);
                 case "POST" -> new PostRequestDecorator(request, objectMapper);
                 default -> throw new IllegalArgumentException("Invalid http method");
