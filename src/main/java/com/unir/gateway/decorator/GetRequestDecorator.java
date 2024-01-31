@@ -12,8 +12,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 
 import java.net.URI;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 
 
 /**
@@ -52,11 +50,8 @@ public class GetRequestDecorator extends ServerHttpRequestDecorator {
     @Override
     @NonNull
     public URI getURI() {
-        String url = gatewayRequest.getExchange().getAttributes().get(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR).toString();
-        String decodedUrl = URLDecoder.decode(url, StandardCharsets.UTF_8);
-
         return UriComponentsBuilder
-                .fromUriString(decodedUrl)
+                .fromUri((URI) gatewayRequest.getExchange().getAttributes().get(ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR))
                 .queryParams(gatewayRequest.getQueryParams())
                 .build()
                 .toUri();
