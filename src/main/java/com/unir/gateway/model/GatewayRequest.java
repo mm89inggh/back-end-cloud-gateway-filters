@@ -10,6 +10,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 
+import java.io.Serializable;
+
 /**
  * This class represents a request that is being processed by the gateway.
  * It contains information about the target HTTP method, query parameters, body, exchange, and headers of the request.
@@ -18,7 +20,7 @@ import org.springframework.web.server.ServerWebExchange;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GatewayRequest {
+public class GatewayRequest implements Serializable {
 
     /**
      * The target HTTP method of the request.
